@@ -124,14 +124,19 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
 
   const plan = await Tour.aggregate([
-    {
-      $unwind: '$startDates',
-    },
+    { $unwind: '$startDates' },
     {
       $match: {
         startDates: {
-          $gte: new Date(`${year}-01-01`),
-          $lte: new Date(`${year + 1}-01-01`),
+          $gte: `${year}-01-01`,
+          $lte: `${year + 1}-01-01`,
+        },
+      },
+    },
+    {
+      $addFields: {
+        startDates: {
+          $toDate: '$startDates',
         },
       },
     },
