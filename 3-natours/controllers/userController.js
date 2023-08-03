@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
-const { getOne, updateOne, deleteOne } = require('./handlerFactory');
+const { getAll, getOne, updateOne, deleteOne } = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -10,20 +10,9 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = async (req, res, next) => {
-  try {
-    const users = await User.find();
-
-    res.status(200).json({
-      status: 'success',
-      results: users.length,
-      data: {
-        users,
-      },
-    });
-  } catch (err) {
-    next(err);
-  }
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
 exports.updateMe = async (req, res, next) => {
@@ -73,6 +62,7 @@ exports.createUser = (req, res) => {
   });
 };
 
+exports.getAllUsers = getAll(User);
 exports.getUser = getOne(User);
 exports.updateUser = updateOne(User);
 exports.deleteUser = deleteOne(User);

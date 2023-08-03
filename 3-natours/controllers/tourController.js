@@ -1,5 +1,4 @@
 const Tour = require('../models/tourModel');
-
 const {
   getAll,
   getOne,
@@ -14,12 +13,6 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
-
-exports.getAllTours = getAll(Tour);
-exports.getTour = getOne(Tour, { path: 'reviews' });
-exports.createTour = createOne(Tour);
-exports.updateTour = updateOne(Tour);
-exports.deleteTour = deleteOne(Tour);
 
 exports.getTourStats = async (req, res, next) => {
   try {
@@ -71,8 +64,8 @@ exports.getMonthlyPlan = async (req, res, next) => {
       {
         $match: {
           startDates: {
-            $gte: `${year}-01-01`,
-            $lte: `${year + 1}-01-01`,
+            $gte: new Date(`${year}-01-01`),
+            $lte: new Date(`${year + 1}-01-01`),
           },
         },
       },
@@ -119,3 +112,9 @@ exports.getMonthlyPlan = async (req, res, next) => {
     });
   }
 };
+
+exports.getAllTours = getAll(Tour);
+exports.getTour = getOne(Tour, { path: 'reviews' });
+exports.createTour = createOne(Tour);
+exports.updateTour = updateOne(Tour);
+exports.deleteTour = deleteOne(Tour);
